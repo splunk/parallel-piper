@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Parallel Piper</title>   
+</head>
+<body style="background-color: #65a637">
+    <img src="logo.png" alt="logo" title="" style="width:101px;height:30px">
+    <h1 style="text-align: center; color:white">Name: <input id="username" type="text" value=""></h1>
+    <h1 style="text-align: center; color:white">Company: <input id="company" type="text" value=""></h1>
+    <div id="container"></div>
+    <h1 id="moAccel" style="text-align: center; color: white"></h1><h1 style="text-align: center;color: white">Strokes</h1>
+    <h1 id="yAccel" style="text-align: center; color: white"></h1><h1 style="text-align: center;color: white">Acceleration</h1>
+
+<script src="raphael-min.js"></script>
+<script src="us-map-svg.js"></script>
+<script src="shake.js"></script>
+<script>
+  window.onload = function () {
+    var R = Raphael("container", 1000, 900),
+      attr = {
+      "fill": "#d3d3d3",
+      "stroke": "#fff",
+      "stroke-opacity": "1",
+      "stroke-linejoin": "round",
+      "stroke-miterlimit": "4",
+      "stroke-width": "0.75",
+      "stroke-dasharray": "none"
+    },
+    usRaphael = {};
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+
+    uuid = getCookie("uuid")
+    if (uuid == "") {
+        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8; return v.toString(16); });
+        setCookie("uuid", uuid, 30)
+    }
+    selectedState = "";
+    selectedBN = "";
+    
+    //Draw Map and store Raphael paths
+    for (var state in usMap) {
+      usRaphael[state] = R.path(usMap[state]).attr(attr);
+    }
+    
+    //Do Work on Map
+    for (var state in usRaphael) {
+      usRaphael[state].color = Raphael.getColor();
+      
+      (function (st, state) {
+
+        st[0].style.cursor = "pointer";
+
+        st[0].onmouseover = function () {
+          
+          if (/webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+              if (selectedBN != "") {
+                  selectedBN.animate({ fill: "#d3d3d3" }, 500);
+                  selectedBN.toFront();
+                  R.safari();
+              }
+              selectedBN = st;
+              selectedState = state
+          }
+          st.animate({ fill: st.color }, 500);
+          st.toFront();
+          R.safari();
+          
+        };
+
+        st[0].onclick = function () {
+            if (selectedBN != "") {
+                selectedBN.animate({ fill: "#d3d3d3" }, 500);
+                selectedBN.toFront();
+                R.safari();
+            }
+            selectedBN = st;
+            selectedState = state
+        }
+
+ 
+        st[0].onmouseout = function () {
+            if (selectedState != state) {
+                st.animate({fill: "#d3d3d3"}, 500);
+                st.toFront();
+                R.safari();
+            }
+        };
+                   
+      })(usRaphael[state], state);
+    }
+
+    
+            
+  };
+</script>
+<script>
+    var oldAccel = 0
+    var strokes = 0
+    var lockOrientation = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('shake', shakeEventDidOccur, false);
+    }
+
+    var myShakeEvent = new Shake({
+        threshold: 11, // optional shake strength threshold
+        timeout: 60 // optional, determines the frequency of event generation
+    });
+
+    myShakeEvent.start();
+
+    function shakeEventDidOccur() {
+        var eventData = {};
+        info = strokes++
+        document.getElementById("moAccel").innerHTML = info;
+        document.getElementById("yAccel").innerHTML = Math.round(event.deltaY) + "m/s";
+        xmlhttp = new XMLHttpRequest();
+        
+        xmlhttp.open("POST", "http://go.mckervey.com:8088/services/collector", true);
+        xmlhttp.setRequestHeader("Authorization", "Splunk 1E9E2EEB-DE15-473E-A225-4C386263D09B");
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        eventData.stroke = strokes
+        eventData.location = selectedState
+        eventData.uid = uuid
+        eventData.acceleration = Math.round(event.deltaY)
+        eventData.name = document.getElementById("username").value
+        //setCookie("username", event.name, 30)
+        eventData.affliation = document.getElementById("company").value
+        eventData.userAgent = navigator.userAgent
+        //setCookie("company", event.affliation,30)
+        
+        xmlhttp.send('{"event":'+JSON.stringify(eventData)+'}');
+
+    }
+
+</script>
+</body>
+</html>
