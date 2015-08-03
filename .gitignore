@@ -1,0 +1,7 @@
+node_modules/*
+dist/*
+app/*
+.idea/*
+build/*
+*.iml
+deploy.sh

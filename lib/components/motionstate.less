@@ -1,0 +1,31 @@
+@import "../variables.less";
+@import "../prefixer.less";
+@import "../mixins.less";
+
+.motion-state {
+  background-color: @background-color;
+  transition: background-color 0.5s ease-in;
+  .fullsize();
+  .flex-ct();
+  
+  .current {
+    .value {
+      font-size: 140px;
+    }
+    .unit {
+      text-align: center;
+    }
+  }
+  .total {
+    padding-top: 40px;
+  }
+  
+  &.motion-severity-1 {}
+  &.motion-severity-2 { background-color: #a5b22d; }
+  &.motion-severity-3 { background-color: #b27d39; }
+  &.motion-severity-4 { background-color: #b26630; }
+  &.motion-severity-5 { background-color: #b25528; }
+  &.motion-severity-7 { background-color: #b23e15; }
+  &.motion-severity-8 { background-color: #b22222; }
+}
+

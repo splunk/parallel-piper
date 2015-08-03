@@ -1,0 +1,160 @@
+@import "../variables.less";
+@import "../prefixer.less";
+@import "../mixins.less";
+
+.steps {
+ .fullsize();
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+
+  .step {
+    flex: 1;
+    -webkit-flex: 1;
+    -webkit-box-align: center;
+    -webkit-box-orient: vertical;
+    position: relative;
+    height: 33%;
+    padding: 10px 10px 10px 20px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    border-bottom: 1px dashed @inactive-text-color;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .icon-check {
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+      font-size: 80px;
+    }
+
+    .step-label {
+      border: 3px solid @inactive-text-color;
+      border-radius: 50%;
+      font-size: 52px;
+      display: inline-block;
+      width: 60px;
+      min-width: 60px;
+      height: 60px;
+      text-align: center;
+      margin-right: 20px;
+    }
+
+    color: @inactive-text-color;
+    &.active {
+      color: @text-color;
+      .step-label {
+        border-color: @text-color;
+      }
+      select, input {
+        border-color: @text-color;
+      }
+    }
+
+  }
+}
+
+.shake-it {
+  display: inline-block;
+  font-size: 30px;
+}
+
+.active .shake-it {
+  .animation-name(shake);
+  .animation-duration(.17s);
+  .animation-iteration-count(20);
+  .animation-timing-function(linear);
+}
+
+.shake-keyframes {
+  0% {
+    .rotate(0deg);
+  }
+  25% {
+    .rotate(10deg);
+  }
+  50% {
+    .rotate(0deg);
+  }
+  75% {
+    .rotate(-10deg);
+  }
+  100% {
+    .rotate(0deg);
+  }
+}
+
+@-webkit-keyframes shake {
+  .shake-keyframes;
+}
+
+@-moz-keyframes shake {
+  .shake-keyframes;
+}
+
+@-ms-keyframes shake {
+  .shake-keyframes;
+}
+
+@-o-keyframes shake {
+  .shake-keyframes;
+}
+
+@keyframes shake {
+  .shake-keyframes;
+}
+
+select, input {
+  background: transparent;
+  border: 1px solid @inactive-text-color;
+  color: #fff;
+  min-width: 100px;
+  width: 120px;
+}
+
+.selected-state, .name-val {
+  font-weight: bold;
+}
+
+.name-prompt {
+  display: inline-block;
+  button {
+    background: @text-color;
+    border: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    color: @background-color;
+  }
+  .name-input {
+    ::-webkit-input-placeholder {
+      color: #fff;
+    }
+    
+    input {
+      margin-right: 10px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      height: 22px;
+      width: 100px;
+      //font-size: 14px;
+      padding: 2px 5px;
+    }
+    
+    button {
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      padding: 2px 15px;
+    }
+  }
+}
