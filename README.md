@@ -12,6 +12,12 @@ npm install
 
 2) Run webpack build
 
+Run `build.sh` in the source directory.
+
+```
+$ sh build.sh
+```
+
 The following environment variables need to be defined for specifying the Splunk 
 server running the HTTP input. 
 
