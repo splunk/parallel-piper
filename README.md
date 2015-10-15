@@ -39,14 +39,20 @@ copy it to a webserver-exposed folder.
 
 # Splunk Setup
 
-Follow the instruction post here http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector to 
-enable the splunk HTTP Event Collector.
+Follow the instruction post here:
+http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector 
+to enable the splunk HTTP Event Collector and create a token.
 
 Once you have your token make sure you update your `PP_SPLUNK_TOKEN` in the previous section.
 
-In order to make cross site calls you will need to enable cors on the HTTP event collector.  To do this edit your
-$SPLUNK_HOME/etc/system/local/server.conf and add the following
-`[httpServer]`
-`crossOriginSharingPolicy = *`
+The parallelpiper app makes use of cross site calls which requires you need to enable cors on the HTTP event collector.  
+
+To do this edit your `$SPLUNK_HOME/etc/system/local/server.conf` and add the following.
+
+```
+[httpServer] \
+crossOriginSharingPolicy = *
+```
+
 If you wish to restrict cors calls to a specific domain replace the asterix with the domain name your are hosting 
 the parallelpiper app on. 
