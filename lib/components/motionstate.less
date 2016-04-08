@@ -10,22 +10,44 @@
   
   .current {
     .value {
-      font-size: 140px;
+      font-size: 60px;
+      &.motion-severity-1 {}
+      &.motion-severity-2 { color: #a5b22d; }
+      &.motion-severity-3 { color: #b27d39; }
+      &.motion-severity-4 { color: #b26630; }
+      &.motion-severity-5 { color: #b25528; }
+      &.motion-severity-7 { color: #b23e15; }
+      &.motion-severity-8 { color: #b22222; }
     }
     .unit {
       text-align: center;
     }
   }
   .total {
-    padding-top: 40px;
+    padding-top: 20px;
   }
   
-  &.motion-severity-1 {}
-  &.motion-severity-2 { background-color: #a5b22d; }
-  &.motion-severity-3 { background-color: #b27d39; }
-  &.motion-severity-4 { background-color: #b26630; }
-  &.motion-severity-5 { background-color: #b25528; }
-  &.motion-severity-7 { background-color: #b23e15; }
-  &.motion-severity-8 { background-color: #b22222; }
+  
+  &.answer-yes { background-color: #65a637; }
+  &.answer-no { background-color: #b22222; }
+  
+  .answer {
+    text-align: center;
+    h2 {
+      font-size: 80px;
+      margin: 10px;
+    }
+  }
+  .answer-help-text {
+    font-size: x-small;
+  }
+  
+  .cur-name {
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    text-align: center;
+  }
 }
+
 

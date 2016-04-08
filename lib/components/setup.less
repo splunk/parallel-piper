@@ -1,0 +1,77 @@
+@import "../variables.less";
+@import "../prefixer.less";
+@import "../mixins.less";
+
+.setup {
+  .fullsize();
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+}
+
+.name-prompt {
+  width: 100%;
+  flex: 1;
+  -webkit-flex: 1;
+  -webkit-box-align: center;
+  -webkit-box-orient: vertical;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  text-align: center;
+  margin: 0 auto;
+
+  .name-input {
+    width: 100%;
+    ::-webkit-input-placeholder {
+      color: #fff;
+    }
+
+    input {
+      margin-right: 10px;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      border: 1px solid #fff;
+      height: 22px;
+      width: 140px;
+      //font-size: 14px;
+      padding: 2px 5px;
+      margin-top: 10px;
+    }
+
+    button {
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      padding: 2px 15px;
+    }
+  }
+  label {
+    display: block;
+    width: 100%;
+  }
+}
+
+.prompt-sub {
+  font-size: 70%;
+}
+
+select, input {
+  background: transparent;
+  border: 1px solid @inactive-text-color;
+  color: #fff;
+  min-width: 100px;
+  width: 120px;
+}
+
+.cur-name {
+  text-align: center;
+  width: 100%;
+}
+                                              
