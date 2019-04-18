@@ -30,6 +30,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Parallel Piper',
             template: 'index.html',
+            filename: 'index.html',
             inject: 'body',
             minify: {},
             hash: true
