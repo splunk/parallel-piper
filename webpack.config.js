@@ -14,6 +14,7 @@ module.exports = {
         root: path.join(__dirname, 'lib'),
     },
     output: {
+        publicPath: '',
         path: path.join(__dirname, 'dist'),
         filename: 'piper.js'
     },
