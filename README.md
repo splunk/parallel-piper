@@ -3,7 +3,9 @@
 Simple mobile web app for sending data to a Splunk HTTP input. It measures the device motion and sends an event with
 the intensity of the motion to Splunk.
 
-## Build/Deploy
+## Development
+
+Ensure that you have Node 16 installed. Then follow these steps:
 
 1. Install NPM deps
 
@@ -13,52 +15,61 @@ npm install
 
 2. Run webpack build
 
+```
+npm run build
+```
+
+This generates the page, JS and all the static content in the `dist` directory.
+
+3. Run NodeJS server
+
+```
+npm start
+```
+
+This will start the server on http://localhost:3000/.
+
+## Build
+
+Github Actions are building a docker container for you on each commit to `main`.
+
+You can also run the build locally by calling:
+
+```
+docker build -t shaker .
+```
+
+To run the image then on port 3000, call:
+
+```
+docker run -p 3000:3000 shaker
+```
+
+> Note: Just running the image, it is not forwarding the events to a Splunk instance. For this, you have to set environment variables, which are specified in the next section.
+
+## Deployment
+
 The following environment variables need to be defined for specifying the Splunk
-server running the HTTP input.
+server that should receive the events:
 
 - `PP_SPLUNK_HOST` (default is `"localhost"`)
 - `PP_SPLUNK_PORT` (default is `8088`)
 - `PP_SPLUNK_SSL` (default is `false`)
 - `PP_SPLUNK_TOKEN` (required) token for the HTTP input (See Splunk Setup below.)
 
-Then run the webpack build:
+Usually you will set these environment variables in your deployment descriptor (e.g. if you're running on Kubernetes).
+
+For testing, you can also run the image locally and set the environment variables:
 
 ```
-PP_SPLUNK_TOKEN=cafecafecafecafe \
-PP_SPLUNK_HOST=my.host.com \
-npm run build
+docker run -p 3000:3000 -e PP_SPLUNK_TOKEN=cafecafecafecafe -e PP_SPLUNK_HOST=my.host.com shaker
 ```
 
-This generates all the page, JS and all the static content in the `dist` directory. Simply
-copy it to a webserver-exposed folder.
-
-Alternatively, you can also build a docker container serving the webpack build:
-
-```
-PP_SPLUNK_TOKEN=cafecafecafecafe PP_SPLUNK_HOST=my.host.com docker build -t shaker --build-arg PP_SPLUNK_TOKEN --build-arg PP_SPLUNK_HOST .
-```
-
-To run it on port 3000, call:
-
-```
-docker run -p 3000:3000 shaker
-```
+> Note: The mobile Chrome browser is not supporting [DeviceMotionEvent](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent) over HTTP, therefore ensure that this app is served via HTTPS. As the docker image doesn't do any TLS termination, a load balancer can do this for you.
 
 # Splunk Setup
 
 To enable the splunk HTTP Event Collector and create a token follow the instructions posted here:
 http://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector
 
-Once you have your token make sure you update your `PP_SPLUNK_TOKEN` in the previous section.
-
-Parallel Piper makes use of cross-origin resource sharing which requires you to enable CORS on the HTTP event collector.
-
-To do this edit your `$SPLUNK_HOME/etc/system/local/server.conf` and add the following.
-
-```
-[httpServer]
-crossOriginSharingPolicy = *
-```
-
-If you wish to restrict cors calls to a specific domain replace the asterix with the domain name your are hosting
-Parallel Piper on.
+Once you have your token make sure you update your `PP_SPLUNK_TOKEN` environment variable.
