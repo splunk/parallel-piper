@@ -57,15 +57,23 @@ server that should receive the events:
 - `PP_SPLUNK_SSL` (default is `false`)
 - `PP_SPLUNK_TOKEN` (required) token for the HTTP input (See Splunk Setup below.)
 
-Usually you will set these environment variables in your deployment descriptor (e.g. if you're running on Kubernetes).
+Usually you will set these environment variables in your deployment descriptor. The folder [`kubernetes-manifests`](./kubernetes-manifests/) contains a sample deployment descriptor for Kubernetes based on the [Splunk Operator](https://splunk.github.io/splunk-operator/).
+
+You can apply it by calling:
+
+```
+kubectl apply -f ./kubernetes-manifests/
+```
+
+If you're using this example descriptor in production, make sure to change the `PP_SPLUNK_TOKEN` environment variable and match it with the `SPLUNK_HEC_TOKEN` configuration.
+
+> **Note**: The mobile Chrome browser is not supporting [DeviceMotionEvent](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent) over HTTP, therefore ensure that this app is served via HTTPS. As the docker image doesn't do any TLS termination, make sure that the Kubernetes ingress controller (e.g. [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/) for EKS) is doing this for you.
 
 For testing, you can also run the image locally and set the environment variables:
 
 ```
 docker run -p 3000:3000 -e PP_SPLUNK_TOKEN=cafecafecafecafe -e PP_SPLUNK_HOST=my.host.com shaker
 ```
-
-> Note: The mobile Chrome browser is not supporting [DeviceMotionEvent](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent) over HTTP, therefore ensure that this app is served via HTTPS. As the docker image doesn't do any TLS termination, a load balancer can do this for you.
 
 # Splunk Setup
 
