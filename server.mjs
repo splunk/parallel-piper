@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import path from "path";
 import fetch from "node-fetch";
+import https from "https";
 
 const app = express();
 
@@ -14,10 +15,12 @@ const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "dist")));
 
+// get configuration from environment variables
 const SPLUNK_HOST = process.env.PP_SPLUNK_HOST || "localhost";
 const SPLUNK_PORT = process.env.PP_SPLUNK_PORT || 8088;
 const SPLUNK_TOKEN = process.env.PP_SPLUNK_TOKEN;
-const protocol = process.env.PP_SPLUNK_SSL == "true" ? "https://" : "http://";
+const isSSL = process.env.PP_SPLUNK_SSL == "true";
+const protocol = isSSL ? "https://" : "http://";
 const targetUrl = `${protocol}${SPLUNK_HOST}:${SPLUNK_PORT}/services/collector`;
 
 if (!SPLUNK_TOKEN) {
@@ -46,7 +49,15 @@ app.post("/event", async (req, res) => {
   }
   // Forward the event data to another server
   try {
+    // Create a custom https.Agent to allow self-signed certificates
+    const agent = isSSL
+      ? new https.Agent({
+          rejectUnauthorized: false,
+        })
+      : undefined;
+
     const forwardResponse = await fetch(targetUrl, {
+      agent: agent,
       method: "POST",
       headers: {
         Authorization: `Splunk ${SPLUNK_TOKEN}`,
