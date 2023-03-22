@@ -34,6 +34,9 @@ if (!SPLUNK_TOKEN) {
 // REST API endpoint
 app.post("/event", async (req, res) => {
   const eventData = req.body;
+  // get the IP of the calling client
+  eventData.clientIp =
+    req.header("X-Forwarded-For") || req.socket.remoteAddress;
   console.log("Received event data:", eventData);
 
   if (!SPLUNK_TOKEN) {
