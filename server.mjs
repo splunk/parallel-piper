@@ -1,4 +1,5 @@
 import url from "url";
+import fs from "fs";
 import express from "express";
 import bodyParser from "body-parser";
 import path from "path";
@@ -89,7 +90,20 @@ app.post("/event", async (req, res) => {
 // Set the port for the server
 const PORT = process.env.PORT || 3000;
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV === "development") {
+  console.log(
+    "Running in development environment. Use self-signed certs for SSL."
+  );
+  const sslOptions = {
+    key: fs.readFileSync("key.pem"),
+    cert: fs.readFileSync("cert.pem"),
+  };
+  https.createServer(sslOptions, app).listen(PORT, () => {
+    console.log(`Secure server listening on https://localhost:${PORT}`);
+  });
+} else {
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}

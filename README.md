@@ -24,10 +24,10 @@ This generates the page, JS and all the static content in the `dist` directory.
 3. Run NodeJS server
 
 ```
-npm start
+npm run dev
 ```
 
-This will start the server on http://localhost:3000/.
+This will start the server on https://localhost:3000/.
 
 ## Build
 

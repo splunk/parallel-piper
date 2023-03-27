@@ -35,6 +35,7 @@
   },
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js -p --progress",
-    "start": "node server.mjs"
+    "start": "node server.mjs",
+    "dev": "NODE_ENV=development node server.mjs"
   }
 }
